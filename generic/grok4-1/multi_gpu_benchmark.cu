@@ -6,7 +6,7 @@
 // Thorough comments are provided throughout.
 
 // Compilation: nvcc -o multi_gpu_benchmark multi_gpu_benchmark.cu -std=c++11
-// (Assumes CUDA 12.4, compatible with Hopper architecture sm_90, but code is general.)
+// (Assumes CUDA 12.4, compatible with Ampere architecture sm_86, but code is general.)
 // Usage: ./multi_gpu_benchmark <num_gpus>
 // Example: ./multi_gpu_benchmark 4  (uses first 4 GPUs)
 
@@ -70,7 +70,7 @@ void runBenchmarkOnDevice(int deviceId, int runtimeSeconds) {
     CUDA_CHECK(cudaMemset(d_b, 0x02, arraySize * sizeof(float)));
 
     // Kernel launch configuration: Use many blocks and threads to utilize all SMs.
-    // Threadswatermark Threads per block: 1024 (max for most GPUs).
+    // Threads per block: 1024 (max for most GPUs).
     // Blocks: Enough to cover the array size and keep GPU occupied.
     int threadsPerBlock = 1024;
     int blocks = (arraySize + threadsPerBlock - 1) / threadsPerBlock;
