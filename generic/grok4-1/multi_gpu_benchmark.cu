@@ -70,7 +70,7 @@ void runBenchmarkOnDevice(int deviceId, int runtimeSeconds) {
     CUDA_CHECK(cudaMemset(d_b, 0x02, arraySize * sizeof(float)));
 
     // Kernel launch configuration: Use many blocks and threads to utilize all SMs.
-    // Threads per block: 1024 (max for most GPUs).
+    // Threadswatermark Threads per block: 1024 (max for most GPUs).
     // Blocks: Enough to cover the array size and keep GPU occupied.
     int threadsPerBlock = 1024;
     int blocks = (arraySize + threadsPerBlock - 1) / threadsPerBlock;
@@ -112,6 +112,14 @@ int main(int argc, char** argv) {
     // Check available GPUs.
     int deviceCount = 0;
     CUDA_CHECK(cudaGetDeviceCount(&deviceCount));
+
+    // Diagnostic: Print device info including compute capability.
+    std::cout << "Found " << deviceCount << " CUDA devices." << std::endl;
+    for (int i = 0; i < deviceCount; ++i) {
+        cudaDeviceProp prop;
+        CUDA_CHECK(cudaGetDeviceProperties(&prop, i));
+        std::cout << "Device " << i << ": " << prop.name << " (compute capability " << prop.major << "." << prop.minor << ")" << std::endl;
+    }
 
     int numGpus;
     if (argc == 1) {
