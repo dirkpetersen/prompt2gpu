@@ -1,7 +1,7 @@
 all: multi_gpu_benchmark
 
 multi_gpu_benchmark: multi_gpu_benchmark.cu
-	nvcc -o multi_gpu_benchmark multi_gpu_benchmark.cu -std=c++11
+	nvcc -o multi_gpu_benchmark multi_gpu_benchmark.cu -std=c++11 -arch=sm_87
 
 clean:
 	rm -f multi_gpu_benchmark

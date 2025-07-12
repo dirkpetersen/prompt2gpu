@@ -109,16 +109,27 @@ void runBenchmarkOnDevice(int deviceId, int runtimeSeconds) {
 }
 
 int main(int argc, char** argv) {
-    // Parse command-line argument for number of GPUs.
-    if (argc != 2) {
-        std::cerr << "Usage: " << argv[0] << " <num_gpus>" << std::endl;
-        return EXIT_FAILURE;
-    }
-    int numGpus = std::stoi(argv[1]);
-
     // Check available GPUs.
     int deviceCount = 0;
     CUDA_CHECK(cudaGetDeviceCount(&deviceCount));
+
+    int numGpus;
+    if (argc == 1) {
+        if (deviceCount == 1) {
+            numGpus = 1;
+        } else {
+            std::cerr << "Usage: " << argv[0] << " <num_gpus>" << std::endl;
+            std::cerr << "Note: If only one GPU is available, the argument is optional." << std::endl;
+            return EXIT_FAILURE;
+        }
+    } else if (argc == 2) {
+        numGpus = std::stoi(argv[1]);
+    } else {
+        std::cerr << "Usage: " << argv[0] << " <num_gpus>" << std::endl;
+        std::cerr << "Note: If only one GPU is available, the argument is optional." << std::endl;
+        return EXIT_FAILURE;
+    }
+
     if (numGpus > deviceCount || numGpus < 1) {
         std::cerr << "Invalid number of GPUs: " << numGpus << ". Available: " << deviceCount << std::endl;
         return EXIT_FAILURE;
