@@ -5,3 +5,8 @@
 *.cubin
 *.fatbin
 .aider*
+# Executables
+benchmark
+
+# Object files
+*.o
